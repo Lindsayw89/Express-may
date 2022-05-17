@@ -28,7 +28,12 @@ app.get('/', function(req, res){
 app.get('/restaurants',  function(req, res){
 	// const restaurantfilepath=path.join(__dirname, 'views', 'restaurants.html')
 	// res.sendFile(restaurantfilepath)
-	res.render('restaurants')
+
+	const filePath=path.join(__dirname, 'data', 'restaurants.json')
+	const fileData=fs.readFileSync(filePath)
+	const storedRestaurants=JSON.parse(fileData)
+
+	res.render('restaurants', {numberOfRestaurants: storedRestaurants.length, restaurants: storedRestaurants})
 })
 
 app.get('/confirm', function(req, res){
@@ -48,6 +53,7 @@ app.post('/recommend', function(req, res){
 	const filePath=path.join(__dirname, 'data', 'restaurants.json')
 	const fileData=fs.readFileSync(filePath)
 	const storedRestaurants=JSON.parse(fileData)
+
 	storedRestaurants.push(restaurant)
 
 	fs.writeFileSync(filePath, JSON.stringify(storedRestaurants))
